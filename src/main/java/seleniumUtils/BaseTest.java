@@ -23,5 +23,5 @@ public class BaseTest {
 		driver.quit(); //inchide toate taburile
 		// driver.close(); //inchide tabul curent
 	}
-
+	
 }
