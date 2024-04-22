@@ -1,5 +1,7 @@
 package curs15;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -59,12 +61,13 @@ public class CssSelectorExample extends BaseTest{
 		passwordField.sendKeys("password");
 	}
 
-	@Test
+//	@Test
 	public void cssExample3() {
 		
 		// a[href='the-long-road-to-the-deep-silence']
 		
-		// Wildcards
+		// ** Wildcards **
+		
 		// * --> contains
 		// a[href*='road-to-the-deep']
 		
@@ -88,6 +91,43 @@ public class CssSelectorExample extends BaseTest{
 		
 		WebElement book4 = driver.findElement(By.cssSelector("a[href$='story']"));
 		System.out.println(book4.getText());
+		
+	}
+	
+	@Test
+	public void cssExample4() {
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		
+		// Navigarea in interiorul unui tagname (doar in jos)
+		//ul[role='tablist']>li --> ">" direct child
+		//ul[role='tablist'] a --> " " oricare element din interior chiar daca nu este direct child
+		//ul>li[role='tab']
+		
+		List<WebElement> menuEntries = driver.findElements(By.cssSelector("ul[role='tablist']>li"));
+		jse.executeScript("arguments[0].setAttribute('style', 'border:4px solid green;')", menuEntries.get(3));
+		
+		//ul[role='tablist']>li[aria-selected='true']
+		WebElement selectedMenuEntry = driver.findElement(By.cssSelector("ul[role='tablist']>li[aria-selected='true']"));
+		jse.executeScript("arguments[0].setAttribute('style', 'border:4px solid blue;')", selectedMenuEntry);
+		
+		//ul[role='tablist']>li:not[aria-selected='true'] -> not - selecteaza elementele care nu indeplinesc regula
+		List<WebElement> notSelectedMenuEntries = driver.findElements(By.cssSelector("ul[role='tablist']>li:not[aria-selected='true']"));
+		for (WebElement element : notSelectedMenuEntries) {
+			
+			jse.executeScript("arguments[0].setAttribute('style', 'border:4px solid orange;')", element);
+		}
+		
+		
+		// ul[role='tablist']>li[role='tab']>a[href*='#sc_tab']
+		// ul parinte al lui li
+			// li este copil al lui ul si parinte al lui a
+				//a este copil al lui li si nepot al lui ul
+		
+		List<WebElement> menuLinks = driver.findElements(By.cssSelector(" ul[role='tablist'] a[href*='#sc_tab']"));
+		for (WebElement element : menuLinks) {
+			
+			jse.executeScript("arguments[0].setAttribute('style', 'border:4px solid pink;')", element);
+		}
 	}
 	
 }
